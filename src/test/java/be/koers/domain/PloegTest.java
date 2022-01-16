@@ -12,6 +12,8 @@ class PloegTest {
     private final static BigDecimal budget = BigDecimal.valueOf(5_000_000);
     private Sponsor sponsorEen, sponsorTwee, sponsorDrie;
     private Ploeg ploeg, verhuisploeg;
+    private Renner renner;
+    private Staf staflid;
 
     @BeforeEach
     void beforeEach() {
@@ -20,10 +22,12 @@ class PloegTest {
         sponsorDrie = new Sponsor("sponserDrie", Soort.ALGEMEEN, budget, null);
         ploeg = new Ploeg("directeur");
         verhuisploeg = new Ploeg("anderdirecteur");
+        renner = new Renner("renner", BigDecimal.valueOf(500000), null, "luxeknecht");
+        staflid = new Staf("ploegleider", BigDecimal.valueOf(100000), null, Type.PLOEGLEIDER);
     }
 
     @Test
-    void addAndRemove() {
+    void ploegAddAndRemoveSponsor() {
         ploeg.add(sponsorEen);
         assertThat(ploeg.getSponsors()).containsOnly(sponsorEen);
         ploeg.add(sponsorTwee);
@@ -40,7 +44,7 @@ class PloegTest {
     }
 
     @Test
-    void sponserVerandertVanPloeg() {
+    void sponsorVerandertVanPloeg() {
         ploeg.add(sponsorEen);
         assertThat(ploeg.getSponsors()).containsOnly(sponsorEen);
         verhuisploeg.add(sponsorEen);
@@ -49,10 +53,28 @@ class PloegTest {
     }
 
     @Test
-    void getTotaalBudget() {
+    void getTotaalBudgetSponsors() {
         ploeg.add(sponsorEen);
         ploeg.add(sponsorTwee);
         ploeg.add(sponsorDrie);
         assertThat(ploeg.getTotaalBudget()).isEqualByComparingTo("15000000");
     }
+
+    @Test
+    void ploegAddAndRemoveRenner() {
+        ploeg.add(renner);
+        assertThat(ploeg.getPersoneelsleden()).containsOnly(renner);
+        ploeg.remove(renner);
+        assertThat(ploeg.getPersoneelsleden()).isEmpty();
+    }
+    //renner verandert van ploeg
+    @Test
+    void rennerVerandertVanPloeg() {
+        ploeg.add(renner);
+        assertThat(ploeg.getPersoneelsleden()).containsOnly(renner);
+        verhuisploeg.add(renner);
+        assertThat(verhuisploeg.getPersoneelsleden()).containsOnly(renner);
+        assertThat(ploeg.getPersoneelsleden()).isEmpty();
+    }
+    //totalekost, maak nog methode
 }
